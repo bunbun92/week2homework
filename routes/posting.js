@@ -11,9 +11,13 @@ router.post("/posting", authMiddleware, async (req, res) => {
     const { postingTitle, postingText} = req.body;
     const userId = res.locals.user.userId;
     
-    if(postingTitle.length < 1){
-        return res.status(412).send({msg: "게시글 제목을 입력해 주세요."});
-    }
+    try{
+        if(postingTitle.length < 1){
+            return res.status(412).send({msg: "게시글 제목을 입력해 주세요."});
+        }
+    } catch (err) {
+        return res.status(400).send({errMsg: "아무 내용도 입력되지 않았습니다."});
+    }    
 
     await Posting.create({postingTitle, postingText, userId});
     
